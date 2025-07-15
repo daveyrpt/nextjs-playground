@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// Users who can sign in
+model User {
+  id       String  @id @default(uuid()) @db.Char(36)
+  name     String  @db.VarChar(255)
+  email    String  @unique
+  password String
+}
+
+/// Companies or people who receive invoices
+model Customer {
+  id        String    @id @default(uuid()) @db.Char(36)
+  name      String    @db.VarChar(255)
+  email     String    @db.VarChar(255)
+  imageUrl  String    @map("image_url") @db.VarChar(255)
+  invoices  Invoice[]
+}
+
+/// Billing records linked to a Customer
+model Invoice {
+  id         String     @id @default(uuid()) @db.Char(36)
+  customerId String     @db.Char(36)
+  amount     Int
+  status     String     @db.VarChar(255)
+  date       DateTime   @db.Date
+
+  customer   Customer   @relation(fields: [customerId], references: [id])
+
+  @@index([customerId])
+}
+
+/// One row per month summarising total revenue
+model Revenue {
+  month   String @id @db.Char(4)  // e.g. "2025"
+  revenue Int
+}
