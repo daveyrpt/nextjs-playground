@@ -15,6 +15,10 @@ Use this section to add personal notes or insights as you explore each topic.
 
 Learn the different ways to style your application in Next.js.
 
+1. Use Tailwind
+2. Use CSS Module (e.g. home.module.css)
+3. Use clsx to toggle between class
+
 ## Optimizations
 
 Learn how to optimize images, links, and fonts.
